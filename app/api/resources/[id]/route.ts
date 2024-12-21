@@ -33,17 +33,16 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const resources = await getResources()
-    const resource = resources.find(r => r.id === parseInt(params.id))
+    const doc = await adminDb.collection('resources').doc(params.id).get()
     
-    if (!resource) {
+    if (!doc.exists) {
       return NextResponse.json(
         { error: 'Resource not found' },
         { status: 404 }
       )
     }
     
-    return NextResponse.json(resource)
+    return NextResponse.json({ id: doc.id, ...doc.data() })
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to fetch resource' },
@@ -58,24 +57,15 @@ export async function PUT(
 ) {
   try {
     const body = await request.json()
-    const resources = await getResources()
-    const index = resources.findIndex(r => r.id === parseInt(params.id))
+    const docRef = adminDb.collection('resources').doc(params.id)
     
-    if (index === -1) {
-      return NextResponse.json(
-        { error: 'Resource not found' },
-        { status: 404 }
-      )
-    }
-    
-    resources[index] = {
-      ...resources[index],
+    await docRef.update({
       ...body,
-      id: parseInt(params.id) // Ensure ID doesn't change
-    }
-    
-    await saveResources(resources)
-    return NextResponse.json(resources[index])
+      updatedAt: new Date().toISOString()
+    })
+
+    const updatedDoc = await docRef.get()
+    return NextResponse.json({ id: updatedDoc.id, ...updatedDoc.data() })
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to update resource' },
