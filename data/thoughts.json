@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1",
+    "title": "Test",
+    "type": "AI",
+    "body": "Hello World",
+    "date": "2024-12-20",
+    "slug": "test"
+  },
+  {
+    "id": "2",
+    "title": "Hello",
+    "type": "longer",
+    "body": "Hello",
+    "date": "2024-12-20",
+    "slug": "hello"
+  },
+  {
+    "id": "3",
+    "title": "fesfs",
+    "type": "longer",
+    "body": "efsef",
+    "date": "2024-12-20",
+    "slug": "fesfs"
+  },
+  {
+    "id": "4",
+    "title": "Prueba",
+    "type": "longer",
+    "body": "Prueba",
+    "date": "2024-12-21",
+    "slug": "prueba"
+  }
+]
