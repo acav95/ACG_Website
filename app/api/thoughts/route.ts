@@ -51,13 +51,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
-    if (!body.title || !body.type || !body.body) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
-    }
-
+    // Ensure data directory exists
     ensureDataDirectory()
-    const thoughts = await getThoughts()
+
+    const body = await request.json()
+    let thoughts = []
+    
+    try {
+      const data = await fs.readFile(thoughtsPath, 'utf-8')
+      thoughts = JSON.parse(data)
+    } catch (error) {
+      // If file doesn't exist, start with empty array
+      thoughts = []
+    }
 
     const newThought = {
       id: String(thoughts.length + 1),

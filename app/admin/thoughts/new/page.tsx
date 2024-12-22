@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import DynamicSelect from '@/components/ui/dynamic-select'
-import { getBaseUrl } from '@/lib/api'
 
 export default function NewThought() {
   const router = useRouter()
@@ -17,22 +16,14 @@ export default function NewThought() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (isSubmitting) return
-
     setError('')
     setIsSubmitting(true)
 
-    if (!thought.title || !thought.type || !thought.body) {
-      setError('All fields are required')
-      setIsSubmitting(false)
-      return
-    }
-
     try {
-      const res = await fetch('/api/thoughts', {
+      const res = await fetch(`${window.location.origin}/api/thoughts`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
+        headers: {
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(thought)
       })
@@ -43,7 +34,7 @@ export default function NewThought() {
         throw new Error(data.error || 'Failed to create thought')
       }
 
-      await router.push('/admin/dashboard')
+      router.push('/admin/dashboard')
       router.refresh()
     } catch (error) {
       console.error('Error creating thought:', error)
