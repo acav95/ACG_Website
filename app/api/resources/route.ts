@@ -1,6 +1,31 @@
 import { NextResponse } from 'next/server'
+import fs from 'fs/promises'
+import path from 'path'
 import { cookies } from 'next/headers'
-import { adminDb } from '@/lib/firebase/admin'
+import { ensureDataDirectory } from '@/lib/storage'
+
+const resourcesPath = path.join(process.cwd(), 'data', 'resources.json')
+
+interface Resource {
+  id: number
+  title: string
+  author: string
+  date: string
+  rating: number
+  type: string
+  comment?: string
+  fileUrl?: string
+}
+
+async function getResources() {
+  try {
+    const data = await fs.readFile(resourcesPath, 'utf-8')
+    return JSON.parse(data)
+  } catch (error) {
+    console.error('Error reading resources:', error)
+    return []
+  }
+}
 
 function isAdmin(request: Request) {
   const cookieStore = cookies()
@@ -10,14 +35,9 @@ function isAdmin(request: Request) {
 
 export async function GET() {
   try {
-    const snapshot = await adminDb.collection('resources').orderBy('date', 'desc').get()
-    const resources = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }))
+    const resources = await getResources()
     return NextResponse.json(resources)
   } catch (error) {
-    console.error('Error in GET /api/resources:', error)
     return NextResponse.json(
       { error: 'Failed to fetch resources' },
       { status: 500 }
@@ -31,22 +51,21 @@ export async function POST(request: Request) {
   }
 
   try {
+    ensureDataDirectory()
     const body = await request.json()
+    const resources = await getResources()
     
     const newResource = {
+      id: resources.length + 1,
       ...body,
-      date: new Date().toISOString().split('T')[0],
-      createdAt: new Date().toISOString()
+      date: new Date().toISOString().split('T')[0]
     }
-
-    const docRef = await adminDb.collection('resources').add(newResource)
     
-    return NextResponse.json({ 
-      id: docRef.id,
-      ...newResource 
-    }, { status: 201 })
+    resources.push(newResource)
+    await fs.writeFile(resourcesPath, JSON.stringify(resources, null, 2))
+    
+    return NextResponse.json(newResource, { status: 201 })
   } catch (error) {
-    console.error('Error creating resource:', error)
     return NextResponse.json(
       { error: 'Failed to create resource' },
       { status: 500 }
@@ -63,7 +82,10 @@ export async function DELETE(request: Request) {
     const body = await request.json()
     const resourceId = body.id
     
-    await adminDb.collection('resources').doc(resourceId).delete()
+    const resources = await getResources()
+    const updatedResources = resources.filter((resource: Resource) => resource.id !== resourceId)
+    
+    await fs.writeFile(resourcesPath, JSON.stringify(updatedResources, null, 2))
     return NextResponse.json({ message: 'Resource deleted successfully' }, { status: 200 })
   } catch (error) {
     console.error('Error deleting resource:', error)
