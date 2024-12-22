@@ -1,34 +1,34 @@
 [
   {
-    "id": "1",
-    "title": "Test",
-    "type": "AI",
-    "body": "Hello World",
-    "date": "2024-12-20",
-    "slug": "test"
-  },
-  {
     "id": "2",
-    "title": "Hello",
+    "title": "ededwd",
     "type": "longer",
-    "body": "Hello",
-    "date": "2024-12-20",
-    "slug": "hello"
+    "body": "GAY",
+    "date": "2024-12-22",
+    "slug": "ededwd"
   },
   {
     "id": "3",
-    "title": "fesfs",
-    "type": "longer",
-    "body": "efsef",
-    "date": "2024-12-20",
-    "slug": "fesfs"
+    "title": "pruebe alv",
+    "type": "shorter",
+    "body": "wededade",
+    "date": "2024-12-22",
+    "slug": "pruebe-alv"
   },
   {
     "id": "4",
-    "title": "Prueba",
+    "title": "Libro 1",
     "type": "longer",
-    "body": "Prueba",
-    "date": "2024-12-21",
-    "slug": "prueba"
+    "body": "libro",
+    "date": "2024-12-22",
+    "slug": "libro-1"
+  },
+  {
+    "id": "5",
+    "title": "GAYYYYY",
+    "type": "longer",
+    "body": "GAYYYYY",
+    "date": "2024-12-22",
+    "slug": "gayyyyy"
   }
 ]

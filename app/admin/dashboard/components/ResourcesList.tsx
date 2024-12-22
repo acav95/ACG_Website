@@ -2,19 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Trash2, Star } from 'lucide-react'
 import { ClientButton } from '@/components/ui'
-
-interface Resource {
-  id: number
-  title: string
-  author: string
-  date: string
-  rating: number
-  comment?: string
-  type: string
-  fileUrl?: string
-}
+import type { Resource } from '@/lib/resources'
 
 export default function ResourcesList() {
   const [resources, setResources] = useState<Resource[]>([])
@@ -44,9 +34,10 @@ export default function ResourcesList() {
         method: 'DELETE',
       })
 
-      if (res.ok) {
-        fetchResources() // Refresh the list
-      }
+      if (!res.ok) throw new Error('Failed to delete resource')
+      
+      fetchResources() // Refresh the list
+      router.refresh() // Refresh the page
     } catch (err) {
       console.error('Error deleting resource:', err)
     }
@@ -70,7 +61,10 @@ export default function ResourcesList() {
               <span>•</span>
               <span>{resource.type}</span>
               <span>•</span>
-              <span>{resource.date}</span>
+              <div className="flex items-center gap-1">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <span>{resource.rating}</span>
+              </div>
             </div>
             {resource.comment && (
               <p className="mt-2 text-sm text-gray-400 line-clamp-2">{resource.comment}</p>

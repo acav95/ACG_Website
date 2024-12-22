@@ -1,11 +1,10 @@
-import { Twitter } from 'lucide-react'
+import { getThoughts } from '@/lib/thoughts'
 import Link from 'next/link'
-import { getThoughts, type Thought } from '@/lib/thoughts'
 
-export default async function Thoughts() {
+export default async function ThoughtsPage() {
   const thoughts = await getThoughts()
   
-  const thoughtsByCategory = thoughts.reduce<Record<string, Thought[]>>((acc, thought) => {
+  const thoughtsByCategory = thoughts.reduce<Record<string, any[]>>((acc, thought) => {
     const category = thought.type.charAt(0).toUpperCase() + thought.type.slice(1)
     if (!acc[category]) {
       acc[category] = []
@@ -21,20 +20,19 @@ export default async function Thoughts() {
           <h2 className="text-2xl font-bold mb-6">{category}</h2>
           <div className="space-y-4">
             {posts.map((post) => (
-              <div key={post.id} className="flex justify-between items-center group">
-                <div className="flex items-center gap-2">
-                  {post.type === 'shorter' && (
-                    <Twitter className="w-5 h-5 text-gray-400" />
-                  )}
-                  <Link 
-                    href={`/thoughts/${post.slug}`} 
-                    className="hover:text-gray-300 transition-colors"
-                  >
-                    {post.title}
-                  </Link>
+              <Link
+                key={post.id}
+                href={`/thoughts/${post.slug}`}
+                className="flex justify-between items-start hover:bg-gray-800/30 p-2 rounded transition-colors"
+              >
+                <div>
+                  <h3 className="font-medium">{post.title}</h3>
+                  <p className="text-gray-400 text-sm mt-1 line-clamp-2">
+                    {post.body}
+                  </p>
                 </div>
-                <span className="text-gray-400">{post.date}</span>
-              </div>
+                <span className="text-gray-400 text-sm">{post.date}</span>
+              </Link>
             ))}
           </div>
         </section>

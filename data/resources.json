@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "id": 1,
+    "rating": 4,
+    "type": "Article",
+    "title": "213123",
+    "author": "1312123",
+    "comment": "131213",
+    "date": "2024-12-22"
+  },
+  {
+    "id": 2,
+    "rating": 0,
+    "type": "Book",
+    "title": "adwddwa",
+    "author": "adadadw",
+    "comment": "adadwwd",
+    "date": "2024-12-22"
+  },
+  {
+    "id": 3,
+    "title": "Tellow",
+    "author": "Jack",
+    "type": "Article",
+    "rating": 4,
+    "comment": "Lets GO!",
+    "date": "2024-12-22"
+  },
+  {
+    "id": 4,
+    "title": "Popo",
+    "author": "Marc",
+    "type": "Article",
+    "rating": 5,
+    "comment": "READ",
+    "date": "2024-12-22"
+  }
+]

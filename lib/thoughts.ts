@@ -11,7 +11,12 @@ export interface Thought {
 }
 
 export async function getThoughts(): Promise<Thought[]> {
-  const thoughtsPath = path.join(process.cwd(), 'data', 'thoughts.json')
-  const data = await fs.readFile(thoughtsPath, 'utf-8')
-  return JSON.parse(data)
+  try {
+    const thoughtsPath = path.join(process.cwd(), 'data', 'thoughts.json')
+    const data = await fs.readFile(thoughtsPath, 'utf-8')
+    return JSON.parse(data)
+  } catch (error) {
+    console.error('Error reading thoughts:', error)
+    return []
+  }
 } 

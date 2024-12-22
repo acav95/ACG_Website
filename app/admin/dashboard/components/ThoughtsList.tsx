@@ -4,15 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Pencil, Trash2 } from 'lucide-react'
 import { ClientButton } from '@/components/ui'
-
-interface Thought {
-  id: string
-  title: string
-  type: string
-  body: string
-  date: string
-  slug: string
-}
+import type { Thought } from '@/lib/thoughts'
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([])
@@ -42,11 +34,10 @@ export default function ThoughtsList() {
         method: 'DELETE',
       })
 
-      if (!res.ok) {
-        throw new Error('Failed to delete thought')
-      }
-
+      if (!res.ok) throw new Error('Failed to delete thought')
+      
       fetchThoughts() // Refresh the list
+      router.refresh() // Refresh the page
     } catch (err) {
       console.error('Error deleting thought:', err)
     }
